@@ -147,12 +147,19 @@ def admin_add():
     upsert_link(slug, target, desc)
     return f"Added/updated {slug} -> {target}\n"
 
+@app.route('/')
+def index():
+    return "✅ Flask Click Tracker is running! Try visiting /admin or /<slug>"
+
 # ---- On start, ensure DB exists ----
 if __name__ == '__main__':
     with app.app_context():
         init_db()
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=int(os.environ.get('PORT', 5000)))
+else:
+    # When running on Render or another WSGI host, initialize the DB once
+    with app.app_context():
+        init_db()
 
-@app.route('/')
-def index():
-    return "✅ Flask Click Tracker is running! Try visiting /admin or /<slug>"
+
+
